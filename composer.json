@@ -1,0 +1,25 @@
+{
+  "name": "webneex/sello-cfdi",
+  "description": "Clase para operar con sello CFDI",
+  "type": "library",
+  "authors": [
+    {
+      "name": "Francisco Carribero",
+      "email": "francisco.carribero@webneex.com"
+    }
+  ],
+  "require": {
+    "php": ">=5.6",
+    "ext-dom": "*",
+    "ext-curl": "*",
+    "nesbot/carbon": "^2.53",
+    "ext-openssl": "*",
+    "ext-gmp": "*",
+    "ext-json": "*"
+  },
+  "autoload": {
+    "classmap": [
+      "src/"
+    ]
+  }
+}
