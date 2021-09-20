@@ -163,6 +163,21 @@ class Sello {
         return $info['subject']['name'];
     }
 
+    public function getPfx() {
+        file_put_contents($path_key = sys_get_temp_dir() . '/' . md5(uniqid()) . '.key', $this->getPrivateKey());
+        file_put_contents($path_cer = sys_get_temp_dir() . '/' . md5(uniqid()) . '.cer', $this->getPublicKey());
+        $path_pfx = sys_get_temp_dir() . '/' . md5(uniqid()) . '.pfx';
+        shell_exec($CMD = "openssl pkcs12 -export -out $path_pfx -inkey $path_key -in $path_cer -passout pass: 2>&1");
+
+        if (!($pfx = file_get_contents($path_pfx))) {
+            throw new Exception('Couldn\'t build PFX file');
+        }
+        @unlink($path_key);
+        @unlink($path_cer);
+        @unlink($path_pfx);
+        return base64_encode($pfx);
+    }
+
     public function isFIEL() {
         $info = $this->getPublicKeyInfo();
         return $info['extensions']['keyUsage'] != "Digital Signature, Non Repudiation";
