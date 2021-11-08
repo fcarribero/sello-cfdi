@@ -104,14 +104,14 @@ class Sello {
     }
 
     /**
-     * @param $signature
+     * @param $signature_base64
      * @param $data
      * @param int $algo
      * @return bool
      */
-    public function verify($signature, $data, $algo = OPENSSL_ALGO_SHA1) {
+    public function verify($signature_base64, $data, $algo = OPENSSL_ALGO_SHA1) {
         $pkey = openssl_pkey_get_public($this->getPublicKey());
-        return (bool)openssl_verify($data, base64_decode($signature), $pkey, $algo);
+        return (bool)openssl_verify($data, base64_decode($signature_base64), $pkey, $algo);
     }
 
     public function getPublicKeySerial() {
