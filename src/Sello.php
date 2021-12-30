@@ -2,7 +2,7 @@
 
 namespace Webneex\SelloCFDI;
 
-use Carbon\Carbon;
+use DateTime;
 use DOMElement;
 use Exception;
 
@@ -126,25 +126,33 @@ class Sello {
     }
 
     /**
-     * @return Carbon
+     * @return DateTime|false
      */
     public function getPublicKeyValidFrom() {
         $info = $this->getPublicKeyInfo();
-        return Carbon::createFromFormat('ymdHise', $info['validFrom']);
+        return DateTime::createFromFormat('ymdHise', $info['validFrom']);
     }
 
     /**
-     * @return Carbon
+     * @return DateTime|false
      */
     public function getPublicKeyValidTo() {
         $info = $this->getPublicKeyInfo();
-        return Carbon::createFromFormat('ymdHise', $info['validTo']);
+        return DateTime::createFromFormat('ymdHise', $info['validTo']);
     }
 
-    public function isValid() {
-        return $this->getPublicKeyValidFrom()->lt(Carbon::now()) && $this->getPublicKeyValidTo()->gt(Carbon::now());
+    /**
+     * @param null $now
+     * @return bool
+     */
+    public function isValid($now = null) {
+        if ($now === null) $now = new DateTime;
+        return $this->getPublicKeyValidFrom() <= $now && $this->getPublicKeyValidTo() >= $now;
     }
 
+    /**
+     * @return false|string
+     */
     public function toJson() {
         return json_encode([
             'public_key' => $this->public_key,
@@ -152,17 +160,27 @@ class Sello {
         ]);
     }
 
+    /**
+     * @return mixed|string
+     */
     public function getPublicKeyRFC() {
         $info = $this->getPublicKeyInfo();
         $parts = explode(' / ', $info['subject']['x500UniqueIdentifier']);
         return $parts[0];
     }
 
+    /**
+     * @return string
+     */
     public function getPublicKeyName() {
         $info = $this->getPublicKeyInfo();
         return $info['subject']['name'];
     }
 
+    /**
+     * @return string
+     * @throws Exception
+     */
     public function getPfx() {
         file_put_contents($path_key = sys_get_temp_dir() . '/' . md5(uniqid()) . '.key', $this->getPrivateKey());
         file_put_contents($path_cer = sys_get_temp_dir() . '/' . md5(uniqid()) . '.cer', $this->getPublicKey());
@@ -178,6 +196,9 @@ class Sello {
         return base64_encode($pfx);
     }
 
+    /**
+     * @return bool
+     */
     public function isFIEL() {
         $info = $this->getPublicKeyInfo();
         return $info['extensions']['keyUsage'] != "Digital Signature, Non Repudiation";

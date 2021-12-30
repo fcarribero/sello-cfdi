@@ -11,7 +11,6 @@
   "require": {
     "ext-dom": "*",
     "ext-curl": "*",
-    "nesbot/carbon": "^2.53",
     "ext-openssl": "*",
     "ext-gmp": "*",
     "ext-json": "*"
@@ -20,5 +19,8 @@
     "classmap": [
       "src/"
     ]
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^5.7"
   }
 }
