@@ -61,7 +61,7 @@ class Sello {
      * @return string
      */
     public function getPublicKeyInfo() {
-        return openssl_x509_parse($this->public_key);
+        return openssl_x509_parse($this->getPublicKey());
     }
 
     /**
@@ -155,8 +155,8 @@ class Sello {
      */
     public function toJson() {
         return json_encode([
-            'public_key' => $this->public_key,
-            'private_key' => $this->private_key
+            'public_key' => $this->getPublicKey(),
+            'private_key' => $this->getPrivateKey()
         ]);
     }
 
