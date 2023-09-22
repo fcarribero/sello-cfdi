@@ -67,7 +67,10 @@ class Sello {
     /**
      * @return string
      */
-    public function getPrivateKey() {
+    public function getPrivateKey($pem = true) {
+        if (!$pem) {
+            return str_replace(['-----BEGIN PRIVATE KEY-----', '-----END PRIVATE KEY-----', "\n", "\r"], '', $this->private_key);
+        }
         return $this->private_key;
     }
 
