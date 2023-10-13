@@ -11,6 +11,10 @@ final class SelloTest extends TestCase {
         $sello->setPublicKey(file_get_contents(__DIR__ . '/resources/30001000000400002333.cer'));
         $sello->setPrivateKey(file_get_contents(__DIR__ . '/resources/CSD_MARIA_WATEMBER_TORRES_WATM640917J45_20190528_175656.key'), '12345678a');
 
+        $this->assertEquals('feea984057fd2150348af8d6ab8762ab', md5($sello->getPrivateKey(true)));
+
+        $this->assertEquals('d8d19f731f5e9cda1751d902fba1a456', md5($sello->getPrivateKey(false)));
+
         $this->assertEquals('30001000000400002333', $sello->getPublicKeySerial());
 
         $this->assertEquals('WATM640917J45', $sello->getPublicKeyRFC());
